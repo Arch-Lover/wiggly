@@ -4,9 +4,7 @@ Wiggly is a GNOME Extention for those who lose their mouse frequently. Wiggly ma
 
 ## Installation
 
-### E.G.O
-
-[<img src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true" alt="Get it on GNOME Extensions" height="100" align="middle">][EGO]
+After I published it in gnome extentions!
 
 ## Screenshots
 
