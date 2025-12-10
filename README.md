@@ -1,6 +1,6 @@
-# Wiggle
+# Wiggly
 
-Wiggle is a GNOME 45+ port/fix for the scaling effect from [Jiggle](https://github.com/jeffchannell/jiggle) with better performance. Wiggle magnifies your cursor when the mouse is moved rapidly.
+Wiggly is a GNOME Extention for those who lose their mouse frequently. Wiggly magnifies your cursor when the mouse is moved rapidly.
 
 ## Installation
 
