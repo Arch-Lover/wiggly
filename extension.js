@@ -21,7 +21,7 @@ const initSettings = (settings, entries) => {
     });
 };
 
-export default class WiggleExtension extends Extension {
+export default class WigglyExtension extends Extension {
     _onCheckIntervalChange(interval) {
         if (this._checkTimeoutId) {
             GLib.Source.remove(this._checkTimeoutId);

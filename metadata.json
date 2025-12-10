@@ -1,15 +1,15 @@
 {
   "description": "Wiggly is a GNOME Shell extension that magnifies the cursor when the mouse is moved rapidly.",
-  "name": "Wiggle",
+  "name": "Wiggly",
   "shell-version": [
     "46",
     "47",
     "48",
     "49"
   ],
-  "url": "https://github.com/Arch-Lover/wiggly/",
+  "url": "https://github.com/Arch-Lover/wiggly",
   "uuid": "wiggly@mojarch",
   "settings-schema": "org.gnome.shell.extensions.wiggly",
   "gettext-domain": "gnome-shell-extension-wiggly",
-  "version": 0.1
+  "version": 1.0
 }

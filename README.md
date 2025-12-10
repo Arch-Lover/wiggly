@@ -12,4 +12,3 @@ After I published it in gnome extentions!
 ![Preference_Appearance](https://github.com/mechtifs/wiggle/assets/18751876/eca5dc1b-59a6-4f42-88ad-e4edc42acc81)
 ![Preference_Behavior](https://github.com/mechtifs/wiggle/assets/18751876/11193ab4-5145-4632-aff2-9de09eda44be)
 
-[EGO]:https://extensions.gnome.org/extension/6784/wiggle/

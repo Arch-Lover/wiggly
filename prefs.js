@@ -74,9 +74,9 @@ class PrefPage extends Adw.PreferencesPage {
     }
 }
 
-export default class WigglePreferences extends ExtensionPreferences {
+export default class wigglyPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
-        window.set_title(gettext('Wiggle'));
+        window.set_title(gettext('wiggly'));
         const _settings = this.getSettings();
 
         const _appearancePage = new PrefPage('Appearance', 'org.gnome.Settings-appearance', [
@@ -99,7 +99,7 @@ export default class WigglePreferences extends ExtensionPreferences {
                 [Field.RADI, nSpin('Radians Threshold', 'Configure the angle threshold to trigger the animation.', 0, 512, 1)],
             ]),
             new PrefGroup('Timer Intervals', 'Configure the intervals of the timers.', [
-                [Field.CHCK, nSpin('Check Interval', 'Configure the interval of checking if Wiggle should trigger the animation.', 0, 1000, 1)],
+                [Field.CHCK, nSpin('Check Interval', 'Configure the interval of checking if wiggly should trigger the animation.', 0, 1000, 1)],
                 [Field.DRAW, nSpin('Draw/Sample Interval', 'Configure the interval of drawing the cursor and sampling the cursor track. You may need to adjust trigger parameters as well.', 0, 1000, 1)],
             ]),
         ]);
