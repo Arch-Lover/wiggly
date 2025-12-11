@@ -93,10 +93,17 @@ export default class Effect extends St.Icon {
                 },
             });
 
-            // After the timeout completes, reset the delay ID
+            // Add the line to reset _unmagnifyDelayId and return SOURCE_REMOVE
             this._unmagnifyDelayId = null;
             return GLib.SOURCE_REMOVE;
         });
+    }
+
+    destroy() {
+        if (this._unmagnifyDelayId) {
+            GLib.Source.remove(this._unmagnifyDelayId);
+        }
+        super.destroy();  // Call the superclass destroy method if needed
     }
 }
 
