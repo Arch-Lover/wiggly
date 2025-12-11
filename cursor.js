@@ -11,6 +11,16 @@ export default class Cursor {
         } else {
             this._tracker = global.backend.get_cursor_tracker();
         }
+
+        // Make sure to connect to the visibility-changed signal at the start
+        this._tracker.connectObject(
+            'visibility-changed', () => {
+                if (this._tracker.get_pointer_visible()) {
+                    this.controlCursorVisibility(false);
+                }
+            },
+            this
+        );
     }
 
     get hot() {
@@ -60,4 +70,11 @@ export default class Cursor {
             this
         );
     }
+
+    destroy() {
+        // Disconnect any signals or event listeners related to this object
+        this._tracker.disconnectObject(this);
+        // You can also clear any references or do other necessary cleanup here
+    }
 }
+

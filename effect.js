@@ -30,6 +30,9 @@ export default class Effect extends St.Icon {
             x: this._hotX / this._spriteSize,
             y: this._hotY / this._spriteSize,
         });
+
+        // Timeout ID for removing delays
+        this._unmagnifyDelayId = null;
     }
 
     set cursorSize(size) {
@@ -62,10 +65,17 @@ export default class Effect extends St.Icon {
     }
 
     unmagnify() {
-        if (this._isInTransition) {
-            return;
+        if (this._isInTransition) return;
+
+        // --- IMPORTANT: Remove previous timeout if it exists ---
+        if (this._unmagnifyDelayId) {
+            GLib.Source.remove(this._unmagnifyDelayId); // Remove the existing timeout
+            this._unmagnifyDelayId = null; // Reset the timeout ID
         }
+
         this._isInTransition = true;
+
+        // Schedule the new timeout
         this._unmagnifyDelayId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, this.unmagnifyDelay, () => {
             this.remove_all_transitions();
             this.ease({
@@ -76,21 +86,17 @@ export default class Effect extends St.Icon {
                 pivot_point: this._pivot,
                 onComplete: () => {
                     Main.uiGroup.remove_child(this);
-                    if (this.isHidden) {
-                        this.cursor.show();
-                    }
+                    if (this.isHidden) this.cursor.show();
+
                     this.isWiggling = false;
                     this._isInTransition = false;
                 },
             });
+
+            // After the timeout completes, reset the delay ID
             this._unmagnifyDelayId = null;
             return GLib.SOURCE_REMOVE;
         });
     }
-
-    destroy() {
-        if (this._unmagnifyDelayId) {
-            GLib.Source.remove(this._unmagnifyDelayId);
-        }
-    }
 }
+

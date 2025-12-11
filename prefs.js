@@ -76,7 +76,6 @@ class PrefPage extends Adw.PreferencesPage {
 
 export default class wigglyPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
-        window.set_title(gettext('wiggly'));
         const _settings = this.getSettings();
 
         const _appearancePage = new PrefPage('Appearance', 'org.gnome.Settings-appearance', [

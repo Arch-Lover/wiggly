@@ -1,6 +1,7 @@
 # Wiggly
 
 Wiggly is a GNOME Extention for those who lose their mouse frequently. Wiggly magnifies your cursor when the mouse is moved rapidly.
+This is fork of wiggle as it was no longer maintained/updated.
 
 ## Installation
 
