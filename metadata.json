@@ -5,11 +5,12 @@
     "46",
     "47",
     "48",
-    "49"
+    "49",
+    "50"
   ],
   "url": "https://github.com/Arch-Lover/wiggly",
   "uuid": "wiggly@mojarch",
   "settings-schema": "org.gnome.shell.extensions.wiggly",
   "gettext-domain": "gnome-shell-extension-wiggly",
-  "version": 1.0
+  "version": 2
 }
