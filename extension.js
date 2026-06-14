@@ -21,10 +21,15 @@ const initSettings = (settings, entries) => {
     });
 };
 
+const removePointerWatch = (watch) => {
+    watch?.remove();
+};
+
 export default class WigglyExtension extends Extension {
     _onCheckIntervalChange(interval) {
         if (this._checkTimeoutId) {
             GLib.Source.remove(this._checkTimeoutId);
+            this._checkTimeoutId = null;
         }
         this._checkTimeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, interval, () => {
             if (this._checkCursorHiddenByProgram()) {
@@ -60,7 +65,7 @@ export default class WigglyExtension extends Extension {
     _onDrawIntervalChange(interval) {
         this._drawInterval = interval;
         if (this._drawIntervalWatch) {
-            this._pointerWatcher._removeWatch(this._drawIntervalWatch);
+            removePointerWatch(this._drawIntervalWatch);
         }
         this._drawIntervalWatch = this._pointerWatcher.addWatch(interval, (x, y) => {
             this._history.push(x, y);
@@ -80,7 +85,7 @@ export default class WigglyExtension extends Extension {
                 this._effect.unmagnify();
             }
             if (this._drawIntervalWatch) {
-                this._pointerWatcher._removeWatch(this._drawIntervalWatch);
+                removePointerWatch(this._drawIntervalWatch);
                 this._drawIntervalWatch = null;
                 this._history.clear();
             }
@@ -111,9 +116,12 @@ export default class WigglyExtension extends Extension {
     disable() {
         if (this._checkTimeoutId) {
             GLib.Source.remove(this._checkTimeoutId);
+            this._checkTimeoutId = null;
         }
         this._togglePointerWatcher(false);
-        this._effect.destroy();
+        if (this._effect) {
+            this._effect.destroy();
+        }
         this._effect = null;
         this._pointerWatcher = null;
         this._history = null;

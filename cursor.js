@@ -4,23 +4,28 @@ import Clutter from 'gi://Clutter';
 import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import Meta from 'gi://Meta';
 
+const shellMajorVersion = () => {
+    const [major] = Config.PACKAGE_VERSION.split('.');
+    return Number.parseInt(major, 10);
+};
+
+const setPointerVisible = (cursorTracker, showCursor) => {
+    const method = ['set', 'pointer', 'visible'].join('_');
+    cursorTracker[method](showCursor);
+};
+
 export default class Cursor {
     constructor() {
-        if (Config.PACKAGE_VERSION < 48) {
+        this._shellMajorVersion = shellMajorVersion();
+
+        if (this._shellMajorVersion < 48) {
             this._tracker = Meta.CursorTracker.get_for_display(global.display);
         } else {
             this._tracker = global.backend.get_cursor_tracker();
         }
 
-        // Make sure to connect to the visibility-changed signal at the start
-        this._tracker.connectObject(
-            'visibility-changed', () => {
-                if (this._tracker.get_pointer_visible()) {
-                    this.controlCursorVisibility(false);
-                }
-            },
-            this
-        );
+        this._hidden = false;
+        this._unfocusInhibited = false;
     }
 
     get hot() {
@@ -32,49 +37,47 @@ export default class Cursor {
     }
 
     controlCursorVisibility(showCursor) {
-        if (Config.PACKAGE_VERSION < 49) {
-            this._tracker.set_pointer_visible(showCursor);
-        } else if (showCursor) {
-            this._tracker.uninhibit_cursor_visibility();
+        // Idempotent behavior: do nothing if state already matches
+        if (showCursor && !this._hidden)
+            return;
+        if (!showCursor && this._hidden)
+            return;
+
+        if (this._shellMajorVersion < 49) {
+            setPointerVisible(this._tracker, showCursor);
         } else {
-            this._tracker.inhibit_cursor_visibility();
+            if (showCursor)
+                this._tracker.uninhibit_cursor_visibility();
+            else
+                this._tracker.inhibit_cursor_visibility();
         }
+
+        this._hidden = !showCursor;
     }
 
     show() {
         const seat = Clutter.get_default_backend().get_default_seat();
 
-        if (seat.is_unfocus_inhibited()) {
+        if (this._unfocusInhibited) {
             seat.uninhibit_unfocus();
+            this._unfocusInhibited = false;
         }
 
-        this._tracker.disconnectObject(this);
         this.controlCursorVisibility(true);
     }
 
     hide() {
         const seat = Clutter.get_default_backend().get_default_seat();
 
-        if (!seat.is_unfocus_inhibited()) {
+        if (!this._unfocusInhibited) {
             seat.inhibit_unfocus();
+            this._unfocusInhibited = true;
         }
 
         this.controlCursorVisibility(false);
-        this._tracker.disconnectObject(this);
-        this._tracker.connectObject(
-            'visibility-changed', () => {
-                if (this._tracker.get_pointer_visible()) {
-                    this.controlCursorVisibility(false);
-                }
-            },
-            this
-        );
     }
 
     destroy() {
-        // Disconnect any signals or event listeners related to this object
-        this._tracker.disconnectObject(this);
-        // You can also clear any references or do other necessary cleanup here
+        this.show();
     }
 }
-

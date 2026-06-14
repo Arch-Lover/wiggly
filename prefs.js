@@ -41,12 +41,19 @@ class PrefGroup extends Adw.PreferencesGroup {
 
     bind(settings) {
         this._rows.forEach(([key, obj]) => {
-            let prop = {
-                Adw_ComboRow: 'selected',
-                Adw_EntryRow: 'text',
-                Adw_SpinRow: 'value',
-                Adw_SwitchRow: 'active',
-            }[obj.constructor.name];
+            let prop;
+            if (obj instanceof Adw.ComboRow) {
+                prop = 'selected';
+            } else if (obj instanceof Adw.EntryRow) {
+                prop = 'text';
+            } else if (obj instanceof Adw.SpinRow) {
+                prop = 'value';
+            } else if (obj instanceof Adw.SwitchRow) {
+                prop = 'active';
+            } else {
+                throw new Error(`Unsupported preferences row: ${obj.constructor.name}`);
+            }
+
             this.add(obj);
             settings.bind(key, obj, prop, Gio.SettingsBindFlags.DEFAULT);
         });

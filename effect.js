@@ -10,6 +10,8 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import Cursor from './cursor.js';
 
+const extensionDir = () => GLib.path_get_dirname(import.meta.url.slice(7));
+
 export default class Effect extends St.Icon {
     static {
         GObject.registerClass(this);
@@ -22,6 +24,7 @@ export default class Effect extends St.Icon {
         this.unmagnifyDuration = 150;
         this.unmagnifyDelay = 0;
         this.isWiggling = false;
+        this._isInTransition = false;
         this.cursor = new Cursor();
         [this._hotX, this._hotY] = this.cursor.hot;
         this._spriteSize = this.cursor.sprite ? this.cursor.sprite.get_width() : 24;
@@ -41,7 +44,7 @@ export default class Effect extends St.Icon {
     }
 
     set cursorPath(path) {
-        this.gicon = Gio.Icon.new_for_string(path || GLib.path_get_dirname(import.meta.url.slice(7)) + '/icons/cursor.svg');
+        this.gicon = Gio.Icon.new_for_string(path || GLib.build_filenamev([extensionDir(), 'icons', 'cursor.svg']));
     }
 
     move(x, y) {
@@ -57,7 +60,7 @@ export default class Effect extends St.Icon {
         this.remove_all_transitions();
         this.ease({
             duration: this.magnifyDuration,
-            transition: Clutter.AnimationMode.EASE_IN_QUAD,
+            mode: Clutter.AnimationMode.EASE_IN_QUAD,
             scale_x: 1.0,
             scale_y: 1.0,
             pivot_point: this._pivot,
@@ -102,8 +105,17 @@ export default class Effect extends St.Icon {
     destroy() {
         if (this._unmagnifyDelayId) {
             GLib.Source.remove(this._unmagnifyDelayId);
+            this._unmagnifyDelayId = null;
         }
-        super.destroy();  // Call the superclass destroy method if needed
+        this.remove_all_transitions();
+        this.cursor.destroy();
+
+        if (this.get_parent()) {
+            Main.uiGroup.remove_child(this);
+        }
+
+        this.isWiggling = false;
+        this._isInTransition = false;
+        super.destroy();
     }
 }
-
