@@ -88,7 +88,7 @@ export default class wigglyPreferences extends ExtensionPreferences {
         const _appearancePage = new PrefPage('Appearance', 'org.gnome.Settings-appearance', [
             new PrefGroup('Cursor Icon', 'Configure the appearance of the cursor icon.', [
                 [Field.HIDE, nSwitch('Hide Original Cursor', 'Hide the original cursor when magnified.')],
-                [Field.SIZE, nSpin('Cursor Size', 'Configure the size of the cursor.', 24, 256, 1)],
+                [Field.SIZE, nSpin('Cursor Size', 'Configure the size of the cursor.', 24, 16384, 1)],
                 [Field.PATH, nEntry('Cursor Icon Path')],
             ]),
             new PrefGroup('Cursor Effect', 'Configure the appearance of the cursor effect.', [
